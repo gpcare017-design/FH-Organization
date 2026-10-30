@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FH Organization &bull; Master Cloud OS (Refined Enterprise Edition)</title>
+    <title>FH Organization &bull; Master Cloud OS (Supreme Admin Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #050507; color: #f5f5f7; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #050507; color: #f5f5f7; overflow: hidden; }
         
         /* Apple-style Ambient Scenery Background */
         .ambient-bg {
@@ -22,172 +22,187 @@
             filter: blur(80px);
         }
 
-        .apple-glass { background: rgba(22, 22, 25, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .apple-glass { background: rgba(22, 22, 25, 0.75); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .apple-card { background: linear-gradient(135deg, rgba(30, 30, 35, 0.65) 0%, rgba(15, 15, 18, 0.85) 100%); border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); backdrop-filter: blur(12px); }
         .apple-card:hover { border-color: rgba(255, 255, 255, 0.22); transform: translateY(-3px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7); }
+
+        .dock-container { background: rgba(20, 20, 23, 0.8); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .dock-icon { transition: all 0.2s ease; }
+        .dock-icon:hover { transform: scale(1.15) translateY(-5px); }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #050507; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
+<body class="h-screen flex flex-col justify-between">
 
     <!-- Ambient Scenery Background -->
     <div class="ambient-bg"></div>
 
-    <!-- Top Apple-Style Navigation Bar -->
-    <header class="apple-glass px-6 py-3.5 flex justify-between items-center z-20 border-b border-white/10">
+    <!-- Top Apple-Style Header & Status Bar -->
+    <header class="apple-glass px-6 py-3 flex justify-between items-center z-20 border-b border-white/10">
         <div class="flex items-center space-x-3">
             <div class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 shadow-lg shadow-cyan-500/30"></div>
-            <h1 class="text-sm font-semibold tracking-wide text-white">FH Organization &bull; Master Refined OS</h1>
+            <h1 class="text-sm font-semibold tracking-wide text-white">FH Organization &bull; Master Cloud OS</h1>
         </div>
         
         <div class="flex items-center space-x-3 text-xs">
             <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Refined Sync Active
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Sync Active
             </span>
             <div class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-300">
-                Admin: <span class="text-white font-semibold">Onik (Mr. FH)</span>
+                Supreme Admin: <span class="text-white font-semibold">Onik (Mr. FH)</span>
             </div>
+            <!-- Smart Wallet Toggle Button -->
+            <button onclick="toggleWalletDrawer()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition shadow-md flex items-center gap-1.5">
+                <span>👝 স্মার্ট ওয়ালেট</span>
+                <span id="wallet-count" class="bg-black/40 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+            </button>
         </div>
     </header>
 
     <!-- Main Workspace Container -->
-    <main class="flex-1 overflow-y-auto p-6 lg:p-10 space-y-8 max-w-7xl mx-auto w-full z-10">
+    <main class="flex-1 overflow-y-auto p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full z-10">
         
-        <!-- Section 1: Refined Workspace & Pinned Command Center -->
-        <section class="apple-card rounded-3xl p-6 lg:p-8 shadow-2xl">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <!-- Section 1: Cloud Control Panel & Storage Sync Hub -->
+        <section class="apple-card rounded-3xl p-6 shadow-2xl">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                 <div>
-                    <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                        ⚡ Master Workspace & Command Hub
+                    <h2 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
+                        ☁️ ক্লাউড কন্ট্রোল প্যানে ও সিঙ্ক হাব
                     </h2>
-                    <p class="text-xs text-gray-400 mt-1">জিপিসি সুনামগঞ্জ, শাড়িন এন্টারপ্রাইজ এবং প্রফেসর ব্রেইন মেমরি ইনডেক্সিংয়ের সুবিন্যস্ত কন্ট্রোল হাব।</p>
+                    <p class="text-xs text-gray-400 mt-0.5">গুগল ওয়ান প্রাইভ ড্রাইভ, সিঙ্গাপুর OCI ইনস্ট্যান্স এবং সাব-ইউজার ক্লাউড পারমিশন ম্যানেজমেন্ট।</p>
                 </div>
-                <button onclick="openConfigModal()" class="px-4 py-2.5 rounded-xl bg-white text-black font-medium text-xs hover:bg-gray-200 transition shadow-lg">
-                    + নতুন মডিউল বা বক্স পিন করুন
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="openConfigModal()" class="px-3.5 py-2 rounded-xl bg-white text-black font-medium text-xs hover:bg-gray-200 transition shadow-md">
+                        + নতুন মডিউল বক্স পিন করুন
+                    </button>
+                    <button onclick="triggerCloudSync()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs border border-white/10 transition">
+                        🔄 সিঙ্ক রিকুয়েস্ট পাঠান
+                    </button>
+                </div>
             </div>
 
-            <!-- Telemetry Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
-                <div class="p-3.5 rounded-2xl bg-black/30 border border-white/5">
-                    <div class="text-[11px] text-gray-400">Active Pockets</div>
-                    <div id="stat-modules-count" class="text-xl font-bold text-white mt-1">6 Active</div>
+            <!-- Cloud Compartments Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs">
+                <div class="p-3 rounded-2xl bg-black/30 border border-white/5">
+                    <div class="text-gray-400 text-[11px]">Google One Pro</div>
+                    <div class="text-white font-bold text-base mt-0.5">2 TB <span class="text-emerald-400 text-[11px] font-normal">(Synced)</span></div>
                 </div>
-                <div class="p-3.5 rounded-2xl bg-black/30 border border-white/5">
-                    <div class="text-[11px] text-gray-400">Professor Brain</div>
-                    <div class="text-xl font-bold text-cyan-400 mt-1">Indexed & Secure</div>
+                <div class="p-3 rounded-2xl bg-black/30 border border-white/5">
+                    <div class="text-gray-400 text-[11px]">Singapore OCI VPS</div>
+                    <div class="text-white font-bold text-base mt-0.5">200 GB <span class="text-cyan-400 text-[11px] font-normal">(Mounted)</span></div>
                 </div>
-                <div class="p-3.5 rounded-2xl bg-black/30 border border-white/5">
-                    <div class="text-[11px] text-gray-400">Master Kill Switch</div>
-                    <div class="text-xl font-bold text-emerald-400 mt-1">All Routes ON</div>
+                <div class="p-3 rounded-2xl bg-black/30 border border-white/5">
+                    <div class="text-gray-400 text-[11px]">Professor Brain</div>
+                    <div class="text-cyan-400 font-bold text-base mt-0.5">Active Index</div>
                 </div>
-                <div class="p-3.5 rounded-2xl bg-black/30 border border-white/5">
-                    <div class="text-[11px] text-gray-400">Environment</div>
-                    <div class="text-xl font-bold text-pink-400 mt-1">Ambient Glass</div>
+                <div class="p-3 rounded-2xl bg-black/30 border border-white/5">
+                    <div class="text-gray-400 text-[11px]">Access Control</div>
+                    <div class="text-rose-400 font-bold text-base mt-0.5">Admin Only</div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 2: Bento Grid Modules -->
+        <!-- Section 2: Bento Grid Workspace Pockets -->
         <section>
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">কোর প্রজেক্ট ও মডুলার পকেটসমূহ</h3>
-                <span class="text-[11px] text-cyan-400">Apple Aesthetic Grid</span>
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">কোর ওয়ার্কস্পেস ও পিনড পকেটসমূহ</h3>
+                <span class="text-[11px] text-indigo-400">ডক থেকে যেকোনো উইন্ডো ফোকাস করুন</span>
             </div>
             
-            <div id="bento-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="bento-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 
-                <!-- Card 1: GPC Sunamganj CRM -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
+                <!-- GPC CRM -->
+                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-56" id="card-gpc">
                     <div>
-                        <div class="flex justify-between items-center mb-3">
+                        <div class="flex justify-between items-center mb-2.5">
                             <span class="text-emerald-400 font-bold text-base">📱 GPC Sunamganj CRM</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Work Mode</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Work Mode</span>
                         </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">সিম রিপ্লেসমেন্ট, এনআইডি লিংকিং, ডিভাইস সেলস, ফ্লেক্সিলোড এবং কাস্টমার ম্যানেজমেন্ট (RMS) ট্র্যাকার।</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">সিম রিপ্লেসমেন্ট, এনআইডি লিংকিং, ডিভাইস সেলস, ফ্লেক্সিলোড এবং কাস্টমার ম্যানেজমেন্ট ট্র্যাকার।</p>
                     </div>
-                    <button onclick="launchModule('GPC CRM')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="launchModule('GPC CRM')" class="flex-1 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">ওপেন করুন</button>
+                        <button onclick="copyToWallet('GPC Sunamganj CRM Data - Active Sims: 45, Pending: 3')" class="px-3 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs border border-indigo-500/30 transition" title="ওয়ালেটে কপি করুন">📥 কপি</button>
+                    </div>
                 </div>
 
-                <!-- Card 2: Sareen Enterprise Solar -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
+                <!-- Sareen Enterprise -->
+                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-56" id="card-sareen">
                     <div>
-                        <div class="flex justify-between items-center mb-3">
+                        <div class="flex justify-between items-center mb-2.5">
                             <span class="text-amber-400 font-bold text-base">☀️ শাড়িন এন্টারপ্রাইজ</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">Solar & Trading</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">Solar & Trading</span>
                         </div>
                         <p class="text-gray-400 text-xs leading-relaxed">অফ-গ্রিড সোলার প্যানেল ব্যাকআপ প্রজেক্ট, টিউবুলার ব্যাটারি ইনভেন্টরি ও সিম রিসেল চুক্তিপত্র আর্কাইভ।</p>
                     </div>
-                    <button onclick="launchModule('Sareen Enterprise')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="launchModule('Sareen Enterprise')" class="flex-1 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">ওপেন করুন</button>
+                        <button onclick="copyToWallet('Sareen Enterprise Solar & Inventory Status - Packages Ready: 12')" class="px-3 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs border border-indigo-500/30 transition" title="ওয়ালেটে কপি করুন">📥 কপি</button>
+                    </div>
                 </div>
 
-                <!-- Card 3: Professor Brain & AI Memory -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
+                <!-- Professor Brain -->
+                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-56" id="card-brain">
                     <div>
-                        <div class="flex justify-between items-center mb-3">
+                        <div class="flex justify-between items-center mb-2.5">
                             <span class="text-cyan-400 font-bold text-base">🧠 Professor Brain & AI</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">Permanent Memory</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">Permanent Memory</span>
                         </div>
                         <p class="text-gray-400 text-xs leading-relaxed">প্রজেক্ট-বেইজড ইনডেক্সিং এবং পার্মানেন্ট মেমরি বট যা আপনার চেইন কমান্ড ও রিমাইন্ডার ব্রডকাস্ট করবে।</p>
                     </div>
-                    <button onclick="launchModule('Professor Brain')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
-                </div>
-
-                <!-- Card 4: Cloud Storage & OCI VPS -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-indigo-400 font-bold text-base">💾 Cloud Storage Hub</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Google One / VPS</span>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">গুগল ওয়ান প্রাইভ ড্রাইভ, সিঙ্গাপুর OCI ইনস্ট্যান্স এবং লোকাল সিকিউরড বিজনেস ডকুমেন্ট ব্যাকআপ হাব।</p>
+                    <div class="flex gap-2">
+                        <button onclick="launchModule('Professor Brain')" class="flex-1 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">ওপেন করুন</button>
+                        <button onclick="copyToWallet('Professor Brain Index State: Fully Synchronized & Indexed')" class="px-3 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs border border-indigo-500/30 transition" title="ওয়ালেটে কপি করুন">📥 কপি</button>
                     </div>
-                    <button onclick="launchModule('Cloud Storage')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
-                </div>
-
-                <!-- Card 5: To-Do & Chain Broadcast -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-purple-400 font-bold text-base">📌 টু-ডু ও চেইন ব্রডকাস্ট</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">Task Engine</span>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">টাস্ক শিডিউলিং, রিমাইন্ডার এবং স্বয়ংক্রিয় ব্রডকাস্টিং সিস্টেম যা নির্দিষ্ট সময়ে নোটিফিকেশন পাঠাবে।</p>
-                    </div>
-                    <button onclick="launchModule('To-Do Engine')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
-                </div>
-
-                <!-- Card 6: Master Kill Switch & Vault -->
-                <div class="apple-card rounded-3xl p-6 flex flex-col justify-between h-60">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-rose-400 font-bold text-base">🔐 Master Kill Switch</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">Security Layer</span>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">সেন্ট্রাল রাউট কন্ট্রোল, ইমিউটেবল অডিট লগার এবং বায়োমেট্রিক প্রোটেক্টেড প্রাইভেট ভল্ট অ্যাক্সেস।</p>
-                    </div>
-                    <button onclick="launchModule('Security Vault')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                        মডিউল ওপেন করুন →
-                    </button>
                 </div>
 
             </div>
         </section>
 
     </main>
+
+    <!-- macOS-Style Dynamic Dock & Switcher Bar -->
+    <nav class="w-full pb-3 px-4 z-30 flex justify-center">
+        <div class="dock-container px-4 py-2 rounded-2xl flex items-center gap-3">
+            <button onclick="focusWorkspace('dashboard')" class="dock-icon flex flex-col items-center group p-1">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white text-lg shadow-md">🏠</div>
+                <span class="text-[10px] text-gray-400 group-hover:text-white mt-1">মাস্টার ড্যাশবোর্ড</span>
+            </button>
+            <button onclick="focusWorkspace('gpc')" class="dock-icon flex flex-col items-center group p-1">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white text-lg shadow-md">📱</div>
+                <span class="text-[10px] text-gray-400 group-hover:text-white mt-1">GPC CRM</span>
+            </button>
+            <button onclick="focusWorkspace('sareen')" class="dock-icon flex flex-col items-center group p-1">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white text-lg shadow-md">☀️</div>
+                <span class="text-[10px] text-gray-400 group-hover:text-white mt-1">শাড়িন এন্টারপ্রাইজ</span>
+            </button>
+            <button onclick="focusWorkspace('brain')" class="dock-icon flex flex-col items-center group p-1">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white text-lg shadow-md">🧠</div>
+                <span class="text-[10px] text-gray-400 group-hover:text-white mt-1">Professor Brain</span>
+            </button>
+            <div class="w-px h-8 bg-white/10 mx-1"></div>
+            <button onclick="openConfigModal()" class="dock-icon flex flex-col items-center group p-1">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-white text-lg shadow-md">➕</div>
+                <span class="text-[10px] text-gray-400 group-hover:text-white mt-1">বক্স পিন করুন</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Smart Wallet Drawer / Popup Overlay -->
+    <div id="wallet-drawer" class="fixed inset-y-0 right-0 w-80 apple-glass z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-white/10 p-5 shadow-2xl">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/10">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">👝 স্মার্ট ওয়ালেট ও ক্লিপবোর্ড পকেট</h3>
+            <button onclick="toggleWalletDrawer()" class="text-gray-400 hover:text-white text-xs bg-white/10 px-2 py-1 rounded-lg">✕</button>
+        </div>
+        <p class="text-[11px] text-gray-400 mb-3">যেকোনো জায়গা থেকে কপি করা ডাটা এখানে জমা থাকবে। যেকোনো উইন্ডোতে পপআপ বা পেস্ট করতে ব্যবহার করুন।</p>
+        
+        <div id="wallet-items-container" class="flex-1 overflow-y-auto space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-black/40 border border-white/5 text-gray-400 text-center italic">ওয়ালেট খালি আছে। যেকোনো কার্ড থেকে 'কপি' করুন।</div>
+        </div>
+    </div>
 
     <!-- Modal for Adding New Tool / Box Dynamically -->
     <div id="config-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
@@ -219,6 +234,8 @@
 
     <!-- JavaScript Controller -->
     <script>
+        let walletData = [];
+
         function openConfigModal() {
             document.getElementById('config-modal').classList.remove('hidden');
             document.getElementById('config-modal').classList.add('flex');
@@ -229,8 +246,65 @@
             document.getElementById('config-modal').classList.remove('flex');
         }
 
+        function toggleWalletDrawer() {
+            const drawer = document.getElementById('wallet-drawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function copyToWallet(text) {
+            walletData.push(text);
+            document.getElementById('wallet-count').textContent = walletData.length;
+            renderWalletItems();
+            alert('সফলভাবে স্মার্ট ওয়ালেটে কপি করা হয়েছে!');
+            toggleWalletDrawer();
+        }
+
+        function renderWalletItems() {
+            const container = document.getElementById('wallet-items-container');
+            if (walletData.length === 0) {
+                container.innerHTML = '<div class="p-3 rounded-xl bg-black/40 border border-white/5 text-gray-400 text-center italic">ওয়ালেট খালি আছে।</div>';
+                return;
+            }
+            container.innerHTML = '';
+            walletData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'p-3 rounded-xl bg-black/50 border border-white/10 space-y-2';
+                div.innerHTML = `
+                    <div class="text-white text-[11px] leading-snug">${item}</div>
+                    <div class="flex justify-end gap-2">
+                        <button onclick="alert('পপআপ পকেট ডেটা: ${item}')" class="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-[10px] text-cyan-300">পপআপ দেখুন</button>
+                        <button onclick="walletData.splice(${index}, 1); document.getElementById('wallet-count').textContent = walletData.length; renderWalletItems();" class="px-2.5 py-1 rounded bg-rose-500/20 text-[10px] text-rose-300">মুছুন</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
         function launchModule(moduleName) {
-            alert(`[Refined Notice] "${moduleName}" মডিউলটি লোড করা হয়েছে। আপনার গিটহাবে পুশ করার জন্য এটি প্রস্তুত।`);
+            alert(`[Supreme Admin] "${moduleName}" মডিউলটি ফোকাস মোডে রান করা হয়েছে।`);
+        }
+
+        function focusWorkspace(wsId) {
+            // macOS style window focus simulation
+            const cards = document.querySelectorAll('.apple-card');
+            cards.forEach(c => c.style.opacity = '0.4');
+            if(wsId === 'dashboard') {
+                cards.forEach(c => c.style.opacity = '1');
+                alert('মাস্টার ড্যাশবোর্ড ফোকাস করা হয়েছে।');
+            } else if(wsId === 'gpc') {
+                document.getElementById('card-gpc').style.opacity = '1';
+                alert('GPC CRM ওয়ার্কস্পেস ফোকাস করা হয়েছে।');
+            } else if(wsId === 'sareen') {
+                document.getElementById('card-sareen').style.opacity = '1';
+                alert('শাড়িন এন্টারপ্রাইজ ওয়ার্কস্পেস ফোকাস করা হয়েছে।');
+            } else if(wsId === 'brain') {
+                document.getElementById('card-brain').style.opacity = '1';
+                alert('Professor Brain মেমরি ইনডেক্স ফোকাস করা হয়েছে।');
+            }
+        }
+
+        function triggerCloudSync() {
+            alert('ক্লাউড স্টোরেজ ও সিঙ্গাপুর OCI সার্ভারের সাথে সিঙ্ক্রোনাইজেশন সফলভাবে সম্পন্ন হয়েছে!');
         }
 
         function addNewToolCard() {
@@ -245,27 +319,23 @@
 
             const container = document.getElementById('bento-grid-container');
             const card = document.createElement('div');
-            card.className = 'apple-card rounded-3xl p-6 flex flex-col justify-between h-60';
+            card.className = 'apple-card rounded-3xl p-6 flex flex-col justify-between h-56';
             card.innerHTML = `
                 <div>
-                    <div class="flex justify-between items-center mb-3">
+                    <div class="flex justify-between items-center mb-2.5">
                         <span class="text-cyan-300 font-bold text-base">✨ ${title}</span>
-                        <span class="text-[10px] px-2.5 py-1 rounded-full bg-white/10 text-gray-300 border border-white/10">${tag}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-gray-300 border border-white/10">${tag}</span>
                     </div>
                     <p class="text-gray-400 text-xs leading-relaxed">${desc}</p>
                 </div>
-                <button onclick="launchModule('${title}')" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">
-                    মডিউল ওপেন করুন →
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="launchModule('${title}')" class="flex-1 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition">ওপেন করুন</button>
+                    <button onclick="copyToWallet('${title} - ${desc}')" class="px-3 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs border border-indigo-500/30 transition">📥 কপি</button>
+                </div>
             `;
             container.appendChild(card);
-
-            // Update stats count
-            const countEl = document.getElementById('stat-modules-count');
-            const currentCount = parseInt(countEl.textContent) || 6;
-            countEl.textContent = (currentCount + 1) + ' Active';
-
             closeConfigModal();
+
             document.getElementById('new-tool-title').value = '';
             document.getElementById('new-tool-tag').value = '';
             document.getElementById('new-tool-desc').value = '';
