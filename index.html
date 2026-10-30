@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FS Organization - Master Cloud OS & Lab Hub</title>
+    <title>FH Organization - Master Cloud OS & Identity Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,6 +14,7 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .route-locked { opacity: 0.45; filter: grayscale(80%); pointer-events: none; position: relative; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col overflow-hidden">
@@ -26,37 +27,45 @@
                 <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
             </div>
-            <h1 class="text-sm md:text-base font-bold tracking-wide text-white">FS Organization &bull; Master Hub & Lab</h1>
+            <h1 class="text-sm md:text-base font-bold tracking-wide text-white">FH Organization &bull; Master Cloud OS</h1>
         </div>
 
-        <!-- Quick Launch Window Tabs (Swing between modules keeping state) -->
+        <!-- Quick Launch Window Tabs -->
         <div class="flex space-x-1.5 overflow-x-auto py-1">
             <button onclick="switchWindow('dashboard')" id="btn-dashboard" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition">মাস্টার ড্যাশবোর্ড</button>
-            <button onclick="switchWindow('autopilot')" id="btn-autopilot" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">⚡ ল্যাব অটো-পাইলট ও বাগ প্যানেল</button>
-            <button onclick="switchWindow('planner')" id="btn-planner" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">📌 প্ল্যানিং ও ডিসিশন বোর্ড</button>
+            <button onclick="switchWindow('access-hub')" id="btn-access-hub" class="nav-btn admin-only px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-rose-400 border border-rose-900/60 hover:bg-slate-700 transition">🔐 মাস্টার সুইচ ও ভল্ট</button>
             <button onclick="switchWindow('crm')" id="btn-crm" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">GPC CRM & MFS</button>
             <button onclick="switchWindow('sareen')" id="btn-sareen" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">শাড়িন এন্টারপ্রাইজ</button>
-            <button onclick="switchWindow('server')" id="btn-server" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Cloud & DB</button>
-            <button onclick="switchWindow('google-hub')" id="btn-google-hub" class="nav-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Google Workspace</button>
+            <button onclick="switchWindow('autopilot')" id="btn-autopilot" class="nav-btn admin-only px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">⚡ অটো-পাইলট ল্যাব</button>
+            <button onclick="switchWindow('planner')" id="btn-planner" class="nav-btn admin-only px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">📌 ডিসিশন বোর্ড</button>
+            <button onclick="switchWindow('server')" id="btn-server" class="nav-btn admin-only px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Cloud & DB</button>
+            <button onclick="switchWindow('google-hub')" id="btn-google-hub" class="nav-btn admin-only px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Google Hub</button>
         </div>
 
+        <!-- Role Switcher & Status -->
         <div class="flex items-center space-x-2">
-            <span class="text-[11px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded-lg animate-pulse">● System Online</span>
-            <div class="text-xs bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 text-slate-300">
-                Admin: <span class="text-emerald-400 font-semibold">Onik</span>
-            </div>
+            <span id="system-status-badge" class="text-[11px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded-lg animate-pulse">● All Routes Online</span>
+            <select id="role-selector" onchange="changeUserRole(this.value)" class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-emerald-400 font-semibold focus:outline-none">
+                <option value="SUPREME_ADMIN">👑 Supreme Admin: Onik (Mr. FH)</option>
+                <option value="DELEGATED_MANAGER">🧑‍💼 Manager: Sojib / Sourov (GPC)</option>
+                <option value="AUDITOR">👁️ Auditor View (Read-Only)</option>
+            </select>
         </div>
     </header>
 
-    <!-- One-Click Pinned Tools Bar -->
+    <!-- One-Click Pinned Tools & Live Route Status Bar -->
     <div class="bg-slate-900/60 border-b border-slate-800/80 px-4 py-1.5 flex items-center gap-2 overflow-x-auto text-xs">
-        <span class="text-slate-400 font-semibold">📌 পিনড টুলস:</span>
+        <span class="text-slate-400 font-semibold">📌 শর্টকাট ও রাউট স্ট্যাটাস:</span>
         <div id="pinned-tools-container" class="flex items-center gap-2">
-            <button onclick="switchWindow('autopilot')" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 px-2.5 py-0.5 rounded border border-slate-700 transition">Auto-Pilot CLI</button>
+            <button onclick="switchWindow('access-hub')" class="admin-only bg-rose-950/60 hover:bg-rose-900 text-rose-300 px-2.5 py-0.5 rounded border border-rose-800 transition">🚨 Master Kill Switch</button>
             <button onclick="switchWindow('crm')" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-0.5 rounded border border-slate-700 transition">SIM & RMS Tracker</button>
-            <button onclick="triggerQuickDiagnostic()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-0.5 rounded border border-slate-700 transition">Run Bug Check</button>
+            <button onclick="triggerQuickDiagnostic()" class="admin-only bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-0.5 rounded border border-slate-700 transition">Run Bug Check</button>
         </div>
-        <button onclick="pinNewToolPrompt()" class="ml-auto text-[11px] bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 px-2.5 py-0.5 rounded border border-slate-700 transition">+ নতুন টুল পিন করুন</button>
+        <div class="ml-auto flex items-center gap-3 text-[11px]">
+            <span id="badge-work" class="text-emerald-400">● Work: ON</span>
+            <span id="badge-personal" class="text-emerald-400 admin-only">● Personal: ON</span>
+            <span id="badge-location" class="text-emerald-400 admin-only">● Location Sync: ON</span>
+        </div>
     </div>
 
     <!-- Main Workspace Area -->
@@ -65,63 +74,73 @@
         <!-- Window 1: Master Dashboard -->
         <div id="window-dashboard" class="window-pane active absolute inset-4 flex-col gap-5 overflow-y-auto pr-1">
             <div>
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">আপনার মূল প্রজেক্ট ও বিজনেস প্ল্যানিং (Active Lab Modules)</h2>
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">আপনার মূল প্রজেক্ট ও বিজনেস রাউটসমূহ (Active Endpoints)</h2>
+                    <span id="current-role-banner" class="text-xs text-emerald-400 font-semibold">অ্যাক্সেস লেভেল: Root Override (Supreme Admin)</span>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     
-                    <div onclick="switchWindow('crm')" class="bg-slate-900 border border-slate-800 hover:border-emerald-500 rounded-xl p-4 cursor-pointer transition">
+                    <!-- Work Mode Card -->
+                    <div id="card-work" onclick="openRoute('crm', 'work')" class="bg-slate-900 border border-slate-800 hover:border-emerald-500 rounded-xl p-4 cursor-pointer transition">
                         <div class="flex justify-between items-start">
                             <span class="text-emerald-400 text-lg font-bold">📱 GPC CRM & FH MFS</span>
-                            <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded">Apps Script / Sheets</span>
+                            <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded">/work/gpc-sunamganj</span>
                         </div>
                         <p class="text-slate-400 text-xs mt-2">সিম রিপ্লেসমেন্ট, এনআইডি লিংকিং, ডিভাইস সেলস, ফ্লেক্সিলোড ও কাস্টমার ম্যানেজমেন্ট (RMS) ট্র্যাকার।</p>
                     </div>
 
-                    <div onclick="switchWindow('autopilot')" class="bg-slate-900 border border-slate-800 hover:border-cyan-500 rounded-xl p-4 cursor-pointer transition">
-                        <div class="flex justify-between items-start">
-                            <span class="text-cyan-400 text-lg font-bold">⚡ Lab Auto-Pilot & Bug Fixer</span>
-                            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded">Command / Diagnostics</span>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-2">কমান্ড-ভিত্তিক টাস্ক এক্সিকিউশন, বাগ আইডেন্টিফিকেশন প্যানেল এবং অটোমেটেড ট্রাবলশুটিং ল্যাব।</p>
-                    </div>
-
-                    <div onclick="switchWindow('sareen')" class="bg-slate-900 border border-slate-800 hover:border-amber-500 rounded-xl p-4 cursor-pointer transition">
+                    <!-- Sareen Enterprise Card -->
+                    <div id="card-sareen" onclick="openRoute('sareen', 'work')" class="bg-slate-900 border border-slate-800 hover:border-amber-500 rounded-xl p-4 cursor-pointer transition">
                         <div class="flex justify-between items-start">
                             <span class="text-amber-400 text-lg font-bold">☀️ শাড়িন এন্টারপ্রাইজ</span>
-                            <span class="text-[10px] bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded">Solar & Business</span>
+                            <span class="text-[10px] bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded">/work/sareen-solar</span>
                         </div>
                         <p class="text-slate-400 text-xs mt-2">অফ-গ্রিড সোলার প্যানেল, টিউবুলার ব্যাটারি, হাইব্রিড ইনভার্টার ব্যাকআপ প্রজেক্ট ও স্থানীয় ট্রেডিং প্ল্যান।</p>
                     </div>
 
-                    <div onclick="switchWindow('server')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500 rounded-xl p-4 cursor-pointer transition">
+                    <!-- Personal Mode Card (Master Bari & Mayatori) -->
+                    <div id="card-personal" onclick="openRoute('access-hub', 'personal')" class="admin-only bg-slate-900 border border-slate-800 hover:border-pink-500 rounded-xl p-4 cursor-pointer transition">
                         <div class="flex justify-between items-start">
-                            <span class="text-indigo-400 text-lg font-bold">🖥️ OCI Cloud & DB Hub</span>
+                            <span class="text-pink-400 text-lg font-bold">🏡 মাস্টার বাড়ি ও মায়াতরী</span>
+                            <span class="text-[10px] bg-pink-950 text-pink-400 border border-pink-800 px-2 py-0.5 rounded">/personal/home-net</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">সেগমেন্টেড ফ্যামিলি নেটওয়ার্ক, বাসার ম্যানেজমেন্ট, সিসিটিভি ও ডুয়াল-মোড ওয়াইফাই রাউটিং কন্ট্রোল।</p>
+                    </div>
+
+                    <!-- Master Switch & Self Vault Card -->
+                    <div id="card-vault" onclick="switchWindow('access-hub')" class="admin-only bg-slate-900 border border-slate-800 hover:border-rose-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-rose-400 text-lg font-bold">🔐 মাস্টার সুইচ ও সেলফ ভল্ট</span>
+                            <span class="text-[10px] bg-rose-950 text-rose-400 border border-rose-800 px-2 py-0.5 rounded">/self/biometric-vault</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">সকল সাব-রাউটের অন/অফ কিল সুইচ, বায়োমেট্রিক প্রাইভেট রেকর্ড ভল্ট এবং ইমিউটেবল অডিট লগ।</p>
+                    </div>
+
+                    <!-- Lab Auto-Pilot -->
+                    <div onclick="switchWindow('autopilot')" class="admin-only bg-slate-900 border border-slate-800 hover:border-cyan-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-cyan-400 text-lg font-bold">⚡ Lab Auto-Pilot & CLI</span>
+                            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded">Diagnostics</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">কমান্ড-ভিত্তিক টাস্ক এক্সিকিউশন, বাগ আইডেন্টিফিকেশন প্যানেল এবং প্রক্সি (192.168.251.82:9080) মনিটরিং।</p>
+                    </div>
+
+                    <!-- OCI Cloud & DB -->
+                    <div onclick="switchWindow('server')" class="admin-only bg-slate-900 border border-slate-800 hover:border-indigo-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-indigo-400 text-lg font-bold">🖥️ সিঙ্গাপুর OCI & DB Hub</span>
                             <span class="text-[10px] bg-indigo-950 text-indigo-400 border border-indigo-800 px-2 py-0.5 rounded">VPS / PostgreSQL</span>
                         </div>
-                        <p class="text-slate-400 text-xs mt-2">Oracle Cloud / Hostinger VPS, PostgreSQL, MySQL, Nextcloud ও সার্ভার সিকিউরিটি পোর্ট কনফিগারেশন।</p>
-                    </div>
-
-                    <div onclick="switchWindow('planner')" class="bg-slate-900 border border-slate-800 hover:border-purple-500 rounded-xl p-4 cursor-pointer transition">
-                        <div class="flex justify-between items-start">
-                            <span class="text-purple-400 text-lg font-bold">📌 আর্কিটেকচার ও ডিসিশন বোর্ড</span>
-                            <span class="text-[10px] bg-purple-950 text-purple-400 border border-purple-800 px-2 py-0.5 rounded">Workflow / Pinboard</span>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-2">প্রজেক্টের স্টেপ-বাই-স্টেপ ডিসিশন ফ্লো, অ্যাসিস্ট ফাইল ম্যানেজমেন্ট ও কাস্টমাইজড মডিউল পকেট।</p>
-                    </div>
-
-                    <div onclick="switchWindow('server')" class="bg-slate-900 border border-slate-800 hover:border-rose-500 rounded-xl p-4 cursor-pointer transition">
-                        <div class="flex justify-between items-start">
-                            <span class="text-rose-400 text-lg font-bold">🌐 Network & Proxy Ops</span>
-                            <span class="text-[10px] bg-rose-950 text-rose-400 border border-rose-800 px-2 py-0.5 rounded">MikroTik / UniFi</span>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-2">ডুয়াল-মোড ওয়াইফাই টপোলজি, প্রক্সি রাউটিং (192.168.251.82:9080), আইপি ওয়াকিটকি ও সিসিটিভি মনিটরিং।</p>
+                        <p class="text-slate-400 text-xs mt-2">Oracle Cloud Singapore Instance, PostgreSQL ডেটাবেস, এবং Google One Pro ক্লাউড স্টোরেজ ব্রিজ।</p>
                     </div>
 
                 </div>
             </div>
 
-            <!-- Google All-in-One Hub Shortcuts -->
-            <div>
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Google অল-হাব ও সাব-প্রোফাইল শর্টকাট</h2>
+            <!-- Google All-in-One Hub Shortcuts (Hidden for Delegated Managers if needed) -->
+            <div class="admin-only">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Google অল-হাব ও ক্লাউড ব্রিজ শর্টকাট</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
                     <a href="https://aistudio.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-blue-500 p-3 rounded-lg text-center transition">
                         <div class="text-lg">✨</div>
@@ -141,7 +160,7 @@
                     </a>
                     <a href="https://drive.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-green-500 p-3 rounded-lg text-center transition">
                         <div class="text-lg">📁</div>
-                        <div class="text-xs font-semibold mt-1">Google Drive</div>
+                        <div class="text-xs font-semibold mt-1">Google One Drive</div>
                     </a>
                     <a href="https://keep.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-yellow-500 p-3 rounded-lg text-center transition">
                         <div class="text-lg">📝</div>
@@ -151,31 +170,132 @@
             </div>
         </div>
 
-        <!-- Window 2: Lab Auto-Pilot & Bug Identification Panel (NEW) -->
+        <!-- NEW WINDOW: FH Master Switch, RBAC, Biometric Vault & Audit Log -->
+        <div id="window-access-hub" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
+                <span class="text-xs font-semibold text-rose-400">🔐 FH Organization - Master Switch Hub, Biometric Vault & Audit Log</span>
+                <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
+            </div>
+
+            <div class="p-4 flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
+                
+                <!-- Col 1: Master Switch Hub (Route Controller) -->
+                <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase text-rose-400 mb-1">১. Master Switch Hub (Route Control)</h3>
+                        <p class="text-[11px] text-slate-400 mb-4">সেন্ট্রাল কন্ট্রোলার থেকে যেকোনো সাব-রাউট অফ করলে সাথে সাথে সেই এন্ডপয়েন্টের অ্যাক্সেস লক হয়ে যাবে।</p>
+                        
+                        <div class="space-y-3">
+                            <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <div class="text-xs font-bold text-white">Work Mode Route (GPC & Sareen)</div>
+                                    <div class="text-[11px] text-slate-400">সজীব ও সৌরভের ডেলিগেটেড অ্যাক্সেস</div>
+                                </div>
+                                <button id="toggle-work" onclick="toggleRoute('work')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">ACTIVE</button>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <div class="text-xs font-bold text-white">Personal Mode (Master Bari & Mayatori)</div>
+                                    <div class="text-[11px] text-slate-400">ফ্যামিলি ও হোম নেটওয়ার্ক এন্ডপয়েন্ট</div>
+                                </div>
+                                <button id="toggle-personal" onclick="toggleRoute('personal')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">ACTIVE</button>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <div class="text-xs font-bold text-white">Location & Timeline Tracker ID</div>
+                                    <div class="text-[11px] text-slate-400">ডেইলি কমিউট ও ডিভাইস রুট ট্র্যাকিং</div>
+                                </div>
+                                <button id="toggle-location" onclick="toggleRoute('location')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">ACTIVE</button>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <div class="text-xs font-bold text-white">Google One Pro Storage Bridge</div>
+                                    <div class="text-[11px] text-slate-400">অটোমেটেড ড্রাইভ ব্যাকআপ টোকেন</div>
+                                </div>
+                                <button id="toggle-bridge" onclick="toggleRoute('bridge')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">LINKED</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="emergencyLockdown()" class="mt-4 w-full bg-red-700 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-lg border border-red-500 transition">
+                        🚨 EMERGENCY MASTER KILL SWITCH (সব রাউট লক করুন)
+                    </button>
+                </div>
+
+                <!-- Col 2: Biometric Self Mode Vault -->
+                <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col">
+                    <h3 class="text-xs font-bold uppercase text-amber-400 mb-1">২. Self Mode & Biometric Vault</h3>
+                    <p class="text-[11px] text-slate-400 mb-4">হাই-সিকিউরিটি প্রাইভেট রেকর্ড, হ্যাবিট ট্র্যাকার এবং পার্সোনাল গ্রোথ ডেটা পাথ।</p>
+
+                    <div id="vault-locked-screen" class="flex-1 flex flex-col items-center justify-center bg-slate-900/70 border border-slate-800 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-3">指纹 / 🔒</div>
+                        <div class="text-xs font-bold text-white mb-1">বায়োমেট্রিক / ফ্যাসিয়াল ভেরিফিকেশন প্রয়োজন</div>
+                        <p class="text-[11px] text-slate-400 mb-4">শুধুমাত্র Mr. FH (Supreme Admin) এই প্রাইভেট ভল্ট আনলক করতে পারবেন।</p>
+                        <button onclick="unlockBiometricVault()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+                            🔓 ফিঙ্গারপ্রিন্ট / Passkey ভেরিফাই করুন
+                        </button>
+                    </div>
+
+                    <div id="vault-unlocked-screen" class="hidden flex-1 flex-col justify-between bg-slate-900 border border-emerald-800/60 rounded-lg p-4">
+                        <div class="space-y-2.5 text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                                <span class="text-emerald-400 font-bold">✓ Biometric Identity Verified</span>
+                                <button onclick="lockBiometricVault()" class="text-[11px] bg-slate-800 hover:bg-slate-700 px-2 py-0.5 rounded text-rose-400">লক করুন</button>
+                            </div>
+                            <div class="p-2.5 bg-slate-950 rounded border border-slate-800">
+                                <div class="font-semibold text-white">প্রাইভেট রেকর্ডস ও হ্যাবিট ট্র্যাকার</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">দৈনিক রুটিন, ব্যক্তিগত ফিন্যান্স ও গোপন নোটসমূহ এখানে এনক্রিপ্টেড অবস্থায় আছে।</div>
+                            </div>
+                            <div class="p-2.5 bg-slate-950 rounded border border-slate-800">
+                                <div class="font-semibold text-white">মাস্টার বাড়ি ও মায়াতরী প্রাইভেট লগ</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">ফ্যামিলি মেম্বার ও হোম সার্ভেইল্যান্সের সংরক্ষিত আর্কাইভ।</div>
+                            </div>
+                        </div>
+                        <div class="text-[11px] text-slate-400 mt-3">Session Token: <code class="text-emerald-400">FH-ROOT-BIO-9981</code></div>
+                    </div>
+                </div>
+
+                <!-- Col 3: Immutable Audit & Auditor View -->
+                <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xs font-bold uppercase text-cyan-400">৩. Immutable Audit Log</h3>
+                        <span class="text-[10px] bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-slate-400">INSERT ONLY (No Delete)</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-3">সিস্টেমের প্রতিটি অ্যাকশন ও কনফিগারেশন পরিবর্তনের অপরিবর্তনীয় রেকর্ড।</p>
+
+                    <div id="audit-log-container" class="flex-1 bg-black/60 border border-slate-800 rounded p-3 text-[11px] font-mono text-slate-300 overflow-y-auto space-y-2 h-64">
+                        <div class="text-emerald-400">[System Boot] FH Organization Master OS initialized.</div>
+                        <div>[Auth] Supreme Admin (Onik) session verified.</div>
+                        <div>[Bridge] Google One Pro Drive Token active.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Window 2: Lab Auto-Pilot & Bug Identification Panel -->
         <div id="window-autopilot" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
-                <span class="text-xs font-semibold text-cyan-400">⚡ রেপ পাইলট (Auto-Pilot Command Center & Bug Resolution Lab)</span>
+                <span class="text-xs font-semibold text-cyan-400">⚡ অটো-পাইলট কমান্ড সেন্টার ও বাগ ল্যাব</span>
                 <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
             </div>
             <div class="p-4 flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
-                
-                <!-- Left: Auto-Pilot Command Terminal -->
                 <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col">
                     <h3 class="text-xs font-bold uppercase text-cyan-400 mb-2">অটো-পাইলট কমান্ড টার্মিনাল</h3>
-                    <p class="text-[11px] text-slate-400 mb-3">এখান থেকে কমান্ড দিলে ল্যাব স্বয়ংক্রিয়ভাবে অ্যাকশন রান করবে (যেমন: <code class="text-emerald-400">check proxy</code>, <code class="text-emerald-400">sync sheets</code>, <code class="text-emerald-400">fix bug</code>, <code class="text-emerald-400">clear cache</code>)।</p>
-                    
+                    <p class="text-[11px] text-slate-400 mb-3">কমান্ড দিন: <code class="text-emerald-400">check proxy</code>, <code class="text-emerald-400">sync sheets</code>, <code class="text-emerald-400">fix bug</code>, <code class="text-emerald-400">status</code></p>
                     <div id="terminal-output" class="flex-1 bg-black/60 border border-slate-800 rounded p-3 text-xs font-mono text-emerald-400 overflow-y-auto space-y-1.5 h-56 mb-3">
-                        <div>[System] FS Lab Auto-Pilot initialized... Ready for commands.</div>
+                        <div>[System] FH Lab Auto-Pilot initialized... Ready.</div>
                         <div class="text-slate-400">[Info] Proxy 192.168.251.82:9080 monitored.</div>
                     </div>
-
                     <div class="flex gap-2">
-                        <input id="autopilot-input" type="text" placeholder="এখানে কমান্ড লিখুন (যেমন: fix bug বা sync sheets)..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" onkeypress="if(event.key==='Enter') runAutoPilotCommand()">
+                        <input id="autopilot-input" type="text" placeholder="এখানে কমান্ড লিখুন..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" onkeypress="if(event.key==='Enter') runAutoPilotCommand()">
                         <button onclick="runAutoPilotCommand()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">রান করুন</button>
                     </div>
                 </div>
 
-                <!-- Right: Bug Identification & Resolution Panel -->
                 <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-xs font-bold uppercase text-rose-400">🐞 বাগ আইডেন্টিফিকেশন ও সমাধান প্যানেল</h3>
@@ -191,18 +311,17 @@
                         </div>
                         <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex justify-between items-center">
                             <div>
-                                <div class="text-xs font-semibold text-white">Proxy Timeout on Port 9080</div>
-                                <div class="text-[11px] text-slate-400">সমাধান: লোকাল গেটওয়ে পিং ও ফায়ারফক্স প্রোফাইল রিলোড।</div>
+                                <div class="text-xs font-semibold text-white">Brave / Chromium Form Autofill Latency</div>
+                                <div class="text-[11px] text-slate-400">সমাধান: ক্যাশ ক্লিয়ার ও আলাদা ডেটাবেস এপিআই টিউনিং।</div>
                             </div>
                             <button onclick="resolveBug(this)" class="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded">সমাধান করুন</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- Window 3: Architecture Planning & Decision Board (NEW) -->
+        <!-- Window 3: Architecture Planning & Decision Board -->
         <div id="window-planner" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
                 <span class="text-xs font-semibold text-purple-400">📌 আর্কিটেকচার প্ল্যানিং বোর্ড ও ডিসিশন ওয়ার্কফ্লো</span>
@@ -210,7 +329,7 @@
             </div>
             <div class="p-4 flex-1 overflow-y-auto space-y-4">
                 <div class="flex gap-2">
-                    <input id="new-plan-title" type="text" placeholder="নতুন প্ল্যান, ডিসিশন বা অ্যাসিস্ট ফাইলের নোট লিখুন..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <input id="new-plan-title" type="text" placeholder="নতুন প্ল্যান বা ডিসিশন নোট লিখুন..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
                     <select id="new-plan-stage" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300">
                         <option value="todo">১. প্ল্যানিং পকেট (To-Do)</option>
                         <option value="running">২. রানিং মডিউল (In Progress)</option>
@@ -218,29 +337,24 @@
                     </select>
                     <button onclick="addPlanCard()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">+ বোর্ডে পিন করুন</button>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Column 1 -->
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3">
                         <h4 class="text-xs font-bold text-amber-400 uppercase mb-3">১. প্ল্যানিং ও অ্যাসিস্ট ফাইল পকেট</h4>
                         <div id="col-todo" class="space-y-2 text-xs">
-                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">২০-২৫টি জিমেইল অ্যাকাউন্টের মাস্টার শিট ইনডেক্সিং</div>
+                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">মুম্বাই ইনস্ট্যান্স টার্মিনেট করে সিঙ্গাপুর রিজিয়নে মাইগ্রেশন</div>
                             <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">শাড়িন এন্টারপ্রাইজ সোলার প্যাকেজ ক্যালকুলেটর</div>
                         </div>
                     </div>
-                    <!-- Column 2 -->
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3">
                         <h4 class="text-xs font-bold text-cyan-400 uppercase mb-3">২. রানিং ডিসিশন ওয়ার্কফ্লো</h4>
                         <div id="col-running" class="space-y-2 text-xs">
-                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">GPC CRM ওয়েব অ্যাপ ও গুগল শিট ডাটা সিঙ্ক</div>
-                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">Oracle Cloud ও PostgreSQL সার্ভার কনফিগারেশন</div>
+                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">GPC CRM ওয়েব অ্যাপ ও Supabase/PostgreSQL কানেকশন</div>
                         </div>
                     </div>
-                    <!-- Column 3 -->
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3">
                         <h4 class="text-xs font-bold text-emerald-400 uppercase mb-3">৩. সম্পন্ন ও এক্টিভেটেড</h4>
                         <div id="col-done" class="space-y-2 text-xs">
-                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">FS Organization Master Cloud OS ড্যাশবোর্ড সেটআপ</div>
+                            <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">FH Organization Access & Identity Architecture যুক্তকরণ</div>
                         </div>
                     </div>
                 </div>
@@ -250,12 +364,12 @@
         <!-- Window 4: GPC CRM & FH MFS Workspace -->
         <div id="window-crm" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
-                <span class="text-xs font-semibold text-emerald-400">GPC Sunamganj CRM &bull; FH MFS / Todo Module</span>
+                <span class="text-xs font-semibold text-emerald-400">GPC Sunamganj CRM &bull; Work Mode Endpoint (/work/gpc-sunamganj)</span>
                 <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-4">
                 <div class="flex gap-2">
-                    <input id="crm-url-input" type="text" placeholder="আপনার Google Apps Script Web App URL দিন..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                    <input id="crm-url-input" type="text" placeholder="আপনার Google Apps Script বা Netlify Web App URL দিন..." class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
                     <button onclick="loadCrmIframe()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg">লোড করুন</button>
                 </div>
                 <iframe id="crm-iframe" src="about:blank" class="w-full h-96 bg-slate-950 border border-slate-800 rounded-lg"></iframe>
@@ -283,24 +397,23 @@
         <!-- Window 6: Cloud & DB Infrastructure -->
         <div id="window-server" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
-                <span class="text-xs font-semibold text-indigo-400">OCI Cloud, VPS & Database Governance</span>
+                <span class="text-xs font-semibold text-indigo-400">OCI Cloud (Singapore), VPS & Database Governance</span>
                 <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-3 text-xs text-slate-300">
-                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Database Engines:</strong> PostgreSQL / MySQL / Google Sheets Master Sync</div>
-                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Cloud Servers:</strong> Oracle Cloud (OCI) Free Tier & Hostinger VPS Control</div>
-                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Security & Access:</strong> Role-Based Access Control (RBAC) & Audit Logs</div>
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Structured Database (টেবিল ডেটা):</strong> PostgreSQL / Supabase / Google Sheets Master Sync</div>
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Cloud Storage (ফাইল ড্রাইভ):</strong> Google One Pro Bridge & Nextcloud</div>
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Cloud Compute:</strong> Oracle Cloud (OCI) Free Tier — Singapore Region</div>
             </div>
         </div>
 
-        <!-- Window 7: Google Workspace Multi-Account Hub (COMPLETED) -->
+        <!-- Window 7: Google Workspace Multi-Account Hub -->
         <div id="window-google-hub" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
             <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
                 <span class="text-xs font-semibold text-blue-400">Google Workspace & Multi-Gmail Account Directory</span>
                 <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-4">
-                <p class="text-xs text-slate-300">আপনার পরিবারের বা প্রজেক্টের একাধিক জিমেইল অ্যাকাউন্ট ও সেগুলোর নির্দিষ্ট ড্রাইভ/শিট ফোল্ডার এখানে একত্রে তালিকাভুক্ত করে ওয়ান-ক্লিকে সুইচ করতে পারবেন।</p>
                 <div class="flex gap-2">
                     <input id="gmail-label" type="text" placeholder="অ্যাকাউন্টের নাম / প্রজেক্টের নাম..." class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white flex-1">
                     <input id="gmail-address" type="email" placeholder="example@gmail.com" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white flex-1">
@@ -309,17 +422,10 @@
                 <div id="gmail-list" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                     <div class="p-3 bg-slate-950 border border-slate-800 rounded-lg flex justify-between items-center">
                         <div>
-                            <div class="font-bold text-white">Master Admin Hub</div>
+                            <div class="font-bold text-white">Master Admin Hub (Google One Pro)</div>
                             <div class="text-slate-400 text-[11px]">প্রধান ড্রাইভ ও শিট কন্ট্রোল</div>
                         </div>
                         <a href="https://drive.google.com/drive/u/0/" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1 rounded">Drive u/0</a>
-                    </div>
-                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-lg flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-white">Secondary Project Slot</div>
-                            <div class="text-slate-400 text-[11px]">ব্যাকআপ ও আর্কাইভ</div>
-                        </div>
-                        <a href="https://drive.google.com/drive/u/1/" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1 rounded">Drive u/1</a>
                     </div>
                 </div>
             </div>
@@ -327,13 +433,34 @@
 
     </main>
 
-    <!-- Core Lab JavaScript Engine -->
+    <!-- Core FH Architecture JavaScript Engine -->
     <script>
-        // Multi-Window Switching (State remains alive in background)
+        // Route State Registry
+        const routeState = {
+            work: true,
+            personal: true,
+            location: true,
+            bridge: true
+        };
+        let currentRole = 'SUPREME_ADMIN';
+
+        // Immutable Audit Logger Function
+        function logAuditEvent(actor, action) {
+            const container = document.getElementById('audit-log-container');
+            const entry = document.createElement('div');
+            const now = new Date().toLocaleTimeString('en-US', { hour12: false });
+            entry.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400">[${actor}]</span> ${action}`;
+            container.prepend(entry);
+        }
+
+        // Window Switching with RBAC Check
         function switchWindow(winId) {
-            document.querySelectorAll('.window-pane').forEach(pane => {
-                pane.classList.remove('active');
-            });
+            if (currentRole === 'DELEGATED_MANAGER' && !['dashboard', 'crm', 'sareen'].includes(winId)) {
+                alert('অ্যাক্সেস ডিনাইড! এই মডিউলটি শুধুমাত্র Supreme Admin (Mr. FH)-এর জন্য সংরক্ষিত।');
+                logAuditEvent('Manager', `Unauthorized access attempt to [${winId}] blocked.`);
+                return;
+            }
+            document.querySelectorAll('.window-pane').forEach(pane => pane.classList.remove('active'));
             document.getElementById('window-' + winId).classList.add('active');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -345,9 +472,109 @@
                 activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
                 activeBtn.classList.add('bg-emerald-600', 'text-white');
             }
+            logAuditEvent(currentRole, `Navigated to window: /${winId}`);
         }
 
-        // Auto-Pilot Command Execution
+        // Open Route Checking Master Switch Status
+        function openRoute(winId, routeKey) {
+            if (!routeState[routeKey]) {
+                alert(`এই রাউটটি (${routeKey.toUpperCase()}) বর্তমানে Master Kill Switch দ্বারা বন্ধ করা আছে!`);
+                logAuditEvent(currentRole, `Blocked entry to locked route: /${routeKey}`);
+                return;
+            }
+            switchWindow(winId);
+        }
+
+        // Master Switch Route Toggle
+        function toggleRoute(key) {
+            if (currentRole !== 'SUPREME_ADMIN') {
+                alert('শুধুমাত্র Supreme Admin মাস্টার সুইচ পরিবর্তন করতে পারবেন!');
+                return;
+            }
+            routeState[key] = !routeState[key];
+            const btn = document.getElementById('toggle-' + key);
+            const isOn = routeState[key];
+
+            btn.textContent = isOn ? 'ACTIVE' : 'LOCKED';
+            btn.className = isOn
+                ? 'bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition'
+                : 'bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition';
+
+            if (key === 'work') {
+                document.getElementById('card-work').classList.toggle('route-locked', !isOn);
+                document.getElementById('card-sareen').classList.toggle('route-locked', !isOn);
+                document.getElementById('badge-work').textContent = isOn ? '● Work: ON' : '● Work: LOCKED';
+                document.getElementById('badge-work').className = isOn ? 'text-emerald-400' : 'text-rose-400';
+            }
+            if (key === 'personal') {
+                document.getElementById('card-personal').classList.toggle('route-locked', !isOn);
+                document.getElementById('badge-personal').textContent = isOn ? '● Personal: ON' : '● Personal: LOCKED';
+                document.getElementById('badge-personal').className = isOn ? 'text-emerald-400 admin-only' : 'text-rose-400 admin-only';
+            }
+            if (key === 'location') {
+                document.getElementById('badge-location').textContent = isOn ? '● Location Sync: ON' : '● Location Sync: OFF';
+                document.getElementById('badge-location').className = isOn ? 'text-emerald-400 admin-only' : 'text-rose-400 admin-only';
+            }
+
+            logAuditEvent('Supreme Admin', `Master Switch: Route [${key.toUpperCase()}] set to ${isOn ? 'ACTIVE' : 'LOCKED'}.`);
+        }
+
+        // Emergency Master Kill Switch
+        function emergencyLockdown() {
+            if (currentRole !== 'SUPREME_ADMIN') return;
+            ['work', 'personal', 'location'].forEach(k => {
+                if (routeState[k]) toggleRoute(k);
+            });
+            const badge = document.getElementById('system-status-badge');
+            badge.textContent = '🚨 LOCKDOWN ACTIVE';
+            badge.className = 'text-[11px] bg-rose-950 text-rose-400 border border-rose-800 px-2.5 py-1 rounded-lg';
+            logAuditEvent('Supreme Admin', '🚨 EMERGENCY KILL SWITCH TRIGGERED! All sub-routes locked.');
+        }
+
+        // Role-Based Access Control (RBAC) Simulator
+        function changeUserRole(role) {
+            currentRole = role;
+            const adminElements = document.querySelectorAll('.admin-only');
+            const banner = document.getElementById('current-role-banner');
+
+            if (role === 'SUPREME_ADMIN') {
+                adminElements.forEach(el => el.style.display = '');
+                banner.textContent = 'অ্যাক্সেস লেভেল: Root Override (Supreme Admin - Mr. FH)';
+                banner.className = 'text-xs text-emerald-400 font-semibold';
+            } else if (role === 'DELEGATED_MANAGER') {
+                adminElements.forEach(el => el.style.display = 'none');
+                banner.textContent = 'অ্যাক্সেস লেভেল: Delegated Manager (শুধুমাত্র GPC ও শাড়িন এন্টারপ্রাইজ)';
+                banner.className = 'text-xs text-amber-400 font-semibold';
+                switchWindow('dashboard');
+            } else if (role === 'AUDITOR') {
+                adminElements.forEach(el => el.style.display = '');
+                banner.textContent = 'অ্যাক্সেস লেভেল: Auditor View (Read-Only Monitoring)';
+                banner.className = 'text-xs text-cyan-400 font-semibold';
+                switchWindow('access-hub');
+            }
+            logAuditEvent('Auth Engine', `Role switched to [${role}]. UI permissions updated.`);
+        }
+
+        // Biometric Vault Simulation
+        function unlockBiometricVault() {
+            if (currentRole !== 'SUPREME_ADMIN') {
+                alert('শুধুমাত্র Supreme Admin বায়োমেট্রিক ভল্ট আনলক করতে পারবেন!');
+                return;
+            }
+            document.getElementById('vault-locked-screen').classList.add('hidden');
+            document.getElementById('vault-unlocked-screen').classList.remove('hidden');
+            document.getElementById('vault-unlocked-screen').classList.add('flex');
+            logAuditEvent('Biometric Layer', 'Self Mode Private Vault UNLOCKED by Mr. FH.');
+        }
+
+        function lockBiometricVault() {
+            document.getElementById('vault-unlocked-screen').classList.add('hidden');
+            document.getElementById('vault-unlocked-screen').classList.remove('flex');
+            document.getElementById('vault-locked-screen').classList.remove('hidden');
+            logAuditEvent('Biometric Layer', 'Self Mode Private Vault LOCKED.');
+        }
+
+        // Auto-Pilot CLI
         function runAutoPilotCommand() {
             const input = document.getElementById('autopilot-input');
             const output = document.getElementById('terminal-output');
@@ -368,13 +595,14 @@
             } else if (lower.includes('sync') || lower.includes('sheet')) {
                 resLine.textContent = '[Auto-Pilot] Triggering Master Google Sheets & GPC CRM sync... Done.';
             } else if (lower.includes('fix') || lower.includes('bug')) {
-                resLine.textContent = '[Auto-Pilot] Scanning modules for errors... Applying automated patch & clearing stale cache.';
+                resLine.textContent = '[Auto-Pilot] Scanning modules... Applying automated patch & clearing stale cache.';
             } else {
-                resLine.textContent = '[Auto-Pilot] Command "' + cmd + '" queued and executed in Lab Sandbox.';
+                resLine.textContent = '[Auto-Pilot] Command "' + cmd + '" executed in Lab Sandbox.';
             }
 
             output.appendChild(resLine);
             output.scrollTop = output.scrollHeight;
+            logAuditEvent('Auto-Pilot CLI', `Executed command: "${cmd}"`);
             input.value = '';
         }
 
@@ -384,12 +612,12 @@
             runAutoPilotCommand();
         }
 
-        // Bug Resolution Handler
         function resolveBug(btn) {
             const card = btn.parentElement;
             btn.textContent = '✓ সমাধান হয়েছে';
             btn.className = 'text-[11px] bg-slate-800 text-emerald-400 px-2.5 py-1 rounded cursor-default';
             card.classList.add('opacity-60');
+            logAuditEvent(currentRole, 'Marked a bug entry as resolved.');
         }
 
         function addBugEntry() {
@@ -407,9 +635,9 @@
                 <button onclick="resolveBug(this)" class="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded">সমাধান করুন</button>
             `;
             list.prepend(item);
+            logAuditEvent(currentRole, `Logged new bug: "${title}"`);
         }
 
-        // Planning & Decision Board
         function addPlanCard() {
             const input = document.getElementById('new-plan-title');
             const stage = document.getElementById('new-plan-stage').value;
@@ -420,32 +648,18 @@
             card.className = 'p-2.5 bg-slate-900 border border-slate-800 rounded flex justify-between items-center';
             card.innerHTML = `<span>${text}</span><button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 ml-2">✕</button>`;
             document.getElementById('col-' + stage).appendChild(card);
+            logAuditEvent(currentRole, `Pinned new decision card to [${stage}]: "${text}"`);
             input.value = '';
         }
 
-        // Pin New Quick Tool
-        function pinNewToolPrompt() {
-            const name = prompt('টুল বা সাইটের নাম লিখুন:');
-            if (!name) return;
-            const url = prompt('লিঙ্ক (URL) দিন (অথবা খালি রাখলে ড্যাশবোর্ডে পিন হবে):');
-            const container = document.getElementById('pinned-tools-container');
-            const btn = document.createElement('button');
-            btn.className = 'bg-slate-800 hover:bg-slate-700 text-purple-400 px-2.5 py-0.5 rounded border border-slate-700 transition';
-            btn.textContent = name;
-            btn.onclick = () => {
-                if (url && url.startsWith('http')) window.open(url, '_blank');
-                else switchWindow('planner');
-            };
-            container.appendChild(btn);
-        }
-
-        // Load Apps Script Web App inside CRM Module
         function loadCrmIframe() {
             const url = document.getElementById('crm-url-input').value.trim();
-            if (url) document.getElementById('crm-iframe').src = url;
+            if (url) {
+                document.getElementById('crm-iframe').src = url;
+                logAuditEvent(currentRole, `Loaded external CRM endpoint in iframe.`);
+            }
         }
 
-        // Add Gmail Slot to Directory
         function addGmailAccount() {
             const label = document.getElementById('gmail-label').value.trim();
             const email = document.getElementById('gmail-address').value.trim();
@@ -462,6 +676,7 @@
                 <a href="https://mail.google.com/mail/?authuser=${encodeURIComponent(email)}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1 rounded">Open</a>
             `;
             container.appendChild(card);
+            logAuditEvent(currentRole, `Added Google Workspace slot: ${email}`);
             document.getElementById('gmail-label').value = '';
             document.getElementById('gmail-address').value = '';
         }
