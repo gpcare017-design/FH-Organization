@@ -3,62 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FS Organization Control Panel</title>
+    <title>FS Organization - Master Cloud OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .window-pane { display: none; }
+        .window-pane.active { display: flex; }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col overflow-hidden">
 
-    <!-- Header -->
-    <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex justify-between items-center shadow-lg">
+    <!-- Top Navigation / Taskbar -->
+    <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex flex-wrap justify-between items-center gap-2 shadow-md">
         <div class="flex items-center space-x-3">
-            <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-            <h1 class="text-xl font-bold tracking-wide text-white">FS Organization Control Panel</h1>
+            <div class="flex space-x-1.5">
+                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+            </div>
+            <h1 class="text-sm md:text-base font-bold tracking-wide text-white">FS Organization &bull; Master Hub</h1>
         </div>
-        <div class="text-sm bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-700 text-gray-300">
-            Status: <span class="text-emerald-400 font-semibold">Online / Ready</span>
+
+        <!-- Quick Launch Window Tabs -->
+        <div class="flex space-x-1.5 overflow-x-auto py-1">
+            <button onclick="switchWindow('dashboard')" id="btn-dashboard" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition">মাস্টার ড্যাশবোর্ড</button>
+            <button onclick="switchWindow('crm')" id="btn-crm" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">GPC CRM & MFS</button>
+            <button onclick="switchWindow('sareen')" id="btn-sareen" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">শাড়িন এন্টারপ্রাইজ</button>
+            <button onclick="switchWindow('server')" id="btn-server" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Cloud & DB (OCI/PostgreSQL)</button>
+            <button onclick="switchWindow('google-hub')" id="btn-google-hub" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Google Workspace</button>
+        </div>
+
+        <div class="text-xs bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 text-slate-300">
+            Admin: <span class="text-emerald-400 font-semibold">Onik</span>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Main Workspace Area -->
+    <main class="flex-1 relative overflow-hidden bg-slate-950 p-4">
         
-        <!-- Control Card 1 -->
-        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-md hover:border-gray-700 transition">
-            <h2 class="text-lg font-semibold text-emerald-400 mb-2">System Governance</h2>
-            <p class="text-gray-400 text-sm mb-4">Central administration, RBAC, and user permission management system.</p>
-            <button onclick="triggerAction('Governance')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 px-4 rounded-lg transition">Manage Access</button>
+        <!-- Window 1: Master Dashboard (All Plans & Projects) -->
+        <div id="window-dashboard" class="window-pane active absolute inset-4 flex-col gap-5 overflow-y-auto pr-1">
+            
+            <!-- Section: Core Projects & Planning -->
+            <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">আপনার মূল প্রজেক্ট ও বিজনেস প্ল্যানিং (Active Plans)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+                    <!-- Plan 1: Telecom CRM -->
+                    <div onclick="switchWindow('crm')" class="bg-slate-900 border border-slate-800 hover:border-emerald-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-emerald-400 text-xl font-bold">📱 GPC CRM & FH MFS</span>
+                            <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded">Apps Script / Sheets</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">সিম রিপ্লেসমেন্ট, এনআইডি লিংকিং, ডিভাইস সেলস, ফ্লেক্সিলোড ও কাস্টমার ম্যানেজমেন্ট (RMS) ট্র্যাকার।</p>
+                    </div>
+
+                    <!-- Plan 2: FH Call & Contract Pro -->
+                    <div onclick="switchWindow('server')" class="bg-slate-900 border border-slate-800 hover:border-cyan-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-cyan-400 text-xl font-bold">📑 FH Call & Contract Pro</span>
+                            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded">RBAC / Ledger</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">কন্ট্রাক্ট ম্যানেজমেন্ট, সিম রিসেল অ্যাট্রিবিউশন, ট্রানজেকশনাল লেজার ও রোল-বেসড অ্যাক্সেস কন্ট্রোল।</p>
+                    </div>
+
+                    <!-- Plan 3: Sareen Enterprise -->
+                    <div onclick="switchWindow('sareen')" class="bg-slate-900 border border-slate-800 hover:border-amber-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-amber-400 text-xl font-bold">☀️ শাড়িন এন্টারপ্রাইজ</span>
+                            <span class="text-[10px] bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded">Solar & Business</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">অফ-গ্রিড সোলার প্যানেল, টিউবুলার ব্যাটারি, হাইব্রিড ইনভার্টার ব্যাকআপ প্রজেক্ট ও স্থানীয় ট্রেডিং প্ল্যান।</p>
+                    </div>
+
+                    <!-- Plan 4: Cloud & Database Infrastructure -->
+                    <div onclick="switchWindow('server')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500 rounded-xl p-4 cursor-pointer transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-indigo-400 text-xl font-bold">🖥️ OCI Cloud & DB Hub</span>
+                            <span class="text-[10px] bg-indigo-950 text-indigo-400 border border-indigo-800 px-2 py-0.5 rounded">VPS / PostgreSQL</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">Oracle Cloud / Hostinger VPS, PostgreSQL, MySQL, Nextcloud ও সার্ভার সিকিউরিটি পোর্ট কনফিগারেশন।</p>
+                    </div>
+
+                    <!-- Plan 5: Shifa AI & IoT Bot Controller -->
+                    <div class="bg-slate-900 border border-slate-800 hover:border-purple-500 rounded-xl p-4 transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-purple-400 text-xl font-bold">🤖 Shifa AI & Hardware Bot</span>
+                            <span class="text-[10px] bg-purple-950 text-purple-400 border border-purple-800 px-2 py-0.5 rounded">Automation / PCB</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">কন্ট্রোল পপআপ, ওপেন/ক্লোজ ডিভাইস অ্যাক্সেস বট এবং কাস্টমাইজড কন্ট্রোলার বোর্ড ইন্টিগ্রেশন।</p>
+                    </div>
+
+                    <!-- Plan 6: Network & Hardware Setup -->
+                    <div class="bg-slate-900 border border-slate-800 hover:border-rose-500 rounded-xl p-4 transition">
+                        <div class="flex justify-between items-start">
+                            <span class="text-rose-400 text-xl font-bold">🌐 Network & Proxy Ops</span>
+                            <span class="text-[10px] bg-rose-950 text-rose-400 border border-rose-800 px-2 py-0.5 rounded">MikroTik / UniFi</span>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2">ডুয়াল-মোড ওয়াইফাই টপোলজি, প্রক্সি রাউটিং (192.168.251.82:9080), আইপি ওয়াকিটকি ও সিসিটিভি মনিটরিং।</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Section: Google All-in-One Hub & Sub-Profiles -->
+            <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Google অল-হাব ও সাব-প্রোফাইল শর্টকাট</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    <a href="https://aistudio.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-blue-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">✨</div>
+                        <div class="text-xs font-semibold mt-1">AI Studio</div>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-emerald-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">📊</div>
+                        <div class="text-xs font-semibold mt-1">Master Sheets</div>
+                    </a>
+                    <a href="https://script.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-amber-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">⚙️</div>
+                        <div class="text-xs font-semibold mt-1">Apps Script</div>
+                    </a>
+                    <a href="https://calendar.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-cyan-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">📅</div>
+                        <div class="text-xs font-semibold mt-1">Calendar</div>
+                    </a>
+                    <a href="https://drive.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-green-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">📁</div>
+                        <div class="text-xs font-semibold mt-1">Google Drive</div>
+                    </a>
+                    <a href="https://keep.google.com" target="_blank" class="bg-slate-900 border border-slate-800 hover:border-yellow-500 p-3 rounded-lg text-center transition">
+                        <div class="text-lg">📝</div>
+                        <div class="text-xs font-semibold mt-1">Google Keep</div>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Control Card 2 -->
-        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-md hover:border-gray-700 transition">
-            <h2 class="text-lg font-semibold text-cyan-400 mb-2">Database & Cloud Sync</h2>
-            <p class="text-gray-400 text-sm mb-4">Master sheets, server credentials, and real-time ledger tracking.</p>
-            <button onclick="triggerAction('Database')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 px-4 rounded-lg transition">Sync Data</button>
+        <!-- Window 2: GPC CRM & FH MFS Workspace -->
+        <div id="window-crm" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
+                <span class="text-xs font-semibold text-emerald-400">GPC Sunamganj CRM &bull; FH MFS / Todo Module</span>
+                <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto space-y-4">
+                <p class="text-xs text-slate-300">এখানে আপনার Google Apps Script Web App URL বা মাস্টার গুগল শিটের এমবেড লিংক যুক্ত করলে সরাসরি এখান থেকেই সিম রিপ্লেসমেন্ট, রিচার্জ এবং কাস্টমার ডাটা এন্ট্রি করতে পারবেন।</p>
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400">
+                    <code>&lt;iframe src="YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL" class="w-full h-96"&gt;&lt;/iframe&gt;</code>
+                </div>
+            </div>
         </div>
 
-        <!-- Control Card 3 -->
-        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-md hover:border-gray-700 transition">
-            <h2 class="text-lg font-semibold text-indigo-400 mb-2">Shifa AI Controller</h2>
-            <p class="text-gray-400 text-sm mb-4">Automated popup triggers, device hooks, and operational logs.</p>
-            <button onclick="triggerAction('AI Controller')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-lg transition">Launch Controller</button>
+        <!-- Window 3: Sareen Enterprise -->
+        <div id="window-sareen" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
+                <span class="text-xs font-semibold text-amber-400">শাড়িন এন্টারপ্রাইজ (Sareen Enterprise) &bull; অপারেশন প্যানেল</span>
+                <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                    <h3 class="text-sm font-bold text-amber-400 mb-2">সোলার ও পাওয়ার ব্যাকআপ মডিউল</h3>
+                    <p class="text-xs text-slate-400">মনোক্রিস্টালাইন সোলার প্যানেল, টিউবুলার ব্যাটারি এবং হাইব্রিড ইনভার্টার প্যাকেজ ও ইনভেন্টরি হিসাব।</p>
+                </div>
+                <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                    <h3 class="text-sm font-bold text-amber-400 mb-2">মার্কেটিং ও চুক্তিপত্র আর্কাইভ</h3>
+                    <p class="text-xs text-slate-400">সজীব ও সৌরভের সাক্ষীসহ ব্যবহৃত সিম রিসেল চুক্তিপত্র, স্থানীয় ট্রেডিং এবং বিজনেস ডকুমেন্টেশন।</p>
+                </div>
+            </div>
         </div>
 
-    </main>
+        <!-- Window 4: Cloud & DB Infrastructure -->
+        <div id="window-server" class="window-pane absolute inset-4 flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700">
+                <span class="text-xs font-semibold text-indigo-400">OCI Cloud, VPS & Database Governance</span>
+                <button onclick="switchWindow('dashboard')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded">✕ ড্যাশবোর্ডে ফিরুন</button>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto space-y-3 text-xs text-slate-300">
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Database Engines:</strong> PostgreSQL / MySQL / Google Sheets Master Sync</div>
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Cloud Servers:</strong> Oracle Cloud (OCI) Free Tier & Hostinger VPS Control</div>
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded"><strong>Security & Access:</strong> Role-Based Access Control (RBAC) & Audit Logs</div>
+            </div>
+        </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 border-t border-gray-800 text-center py-4 text-xs text-gray-500">
-        &copy; 2026 FS Organization. All rights reserved. Powered by Netlify.
-    </footer>
-
-    <script>
-        function triggerAction(actionName) {
-            // আগের এলার্টটি সরিয়ে সরাসরি আপনার নির্দিষ্ট লিংকে রিডাইরেক্ট করার কোড
-            window.location.href = 'https://github.com/gpcare017-design/FH-Organization/tree/main';
-        }
-    </script>
-</body>
-</html>
+        <!-- Window 5: Google Workspace Multi-Frame -->
+        <div id="window-google-hub" class="window-pane absolute inset-4 flex-
